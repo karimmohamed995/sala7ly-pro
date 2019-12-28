@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
-
+import NoncesServices from '../services/noncesServices'
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .label('Email')
@@ -23,7 +23,7 @@ export default class Login extends React.Component {
 
   handleSubmit = values => {
     if (values.email.length > 0 && values.password.length > 0) {
-      this.props.navigation.navigate('App')
+      NoncesServices.GetNonce(values.email);
     }
   }
 
