@@ -1,17 +1,17 @@
 import React from 'react'
 import {createStackNavigator} from 'react-navigation-stack';
-import ServiceSelectionScreen from '../pages/ServiceSelectionScreen';
+import JobsScreen from '../pages/JobsScreen';
 import NavigationDrawerStructure from '../components/NavigationDrawerStructure'
-const ServiceStack = createStackNavigator(
+const JobsHistoryStack = createStackNavigator(
   {
-    ServiceSelection: {
-      screen: ServiceSelectionScreen,
+    JobsHistory: {
+      screen: JobsScreen,
       navigationOptions: ({navigation}) => ({
-        title: 'Services Scelection',
+        title: 'My Orders',
         headerLeft: <NavigationDrawerStructure navigationProps={navigation} />,
       }),
     },
   }
 );
 
-export default ServiceStack;
+export default JobsHistoryStack ;

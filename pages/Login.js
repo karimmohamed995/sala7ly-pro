@@ -6,7 +6,11 @@ import * as Yup from 'yup'
 import FormInput from '../components/FormInput'
 import FormButton from '../components/FormButton'
 import ErrorMessage from '../components/ErrorMessage'
-import NoncesServices from '../services/noncesServices'
+import NoncesServices from '../services/NoncesServices'
+import DigestHelper from '../helpers/DigestHelper'
+import UsersServices from '../services/UsersServices'
+import StorageHelper from '../helpers/StorageHelper'
+
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .label('Email')
@@ -21,9 +25,37 @@ const validationSchema = Yup.object().shape({
 export default class Login extends React.Component {
   goToSignup = () => this.props.navigation.navigate('Signup')
 
-  handleSubmit = values => {
+  goToHome = () => this.props.navigation.navigate('App')
+  state = {
+    isSubmitting : false
+  }
+
+    handleSubmit(values) {
     if (values.email.length > 0 && values.password.length > 0) {
-      NoncesServices.GetNonce(values.email);
+      DigestHelper.SetCredentials(values.email,values.password);
+      NoncesServices.GetNonce(values.email,this.handleNonceResponse);
+      this.state.isSubmitting = true;
+    }
+  }
+
+  handleNonceResponse = (response) =>{
+    if(response.status == 200){
+      UsersServices.getLoggedInUser(this.handleUsersResponse);
+    }
+    else{
+      alert("User Not found");
+      this.state.isSubmitting = false;
+    }
+  }
+    handleUsersResponse = (response) =>{
+    if(response.status == 200){
+        StorageHelper.setUser(response.response);
+        this.goToHome();
+    }
+    else{
+      alert("Incorrect Password");
+      this.state.isSubmitting = false;
+      
     }
   }
 
@@ -43,8 +75,7 @@ export default class Login extends React.Component {
             errors,
             isValid,
             touched,
-            handleBlur,
-            isSubmitting
+            handleBlur
           }) => (
             <Fragment>
               <FormInput
@@ -76,8 +107,8 @@ export default class Login extends React.Component {
                   onPress={handleSubmit}
                   title='LOGIN'
                   buttonColor='#039BE5'
-                  disabled={!isValid || isSubmitting}
-                  loading={isSubmitting}
+                  disabled={!isValid || this.state.isSubmitting}
+                  loading={this.state.isSubmitting}
                 />
               </View>
             </Fragment>
@@ -87,7 +118,7 @@ export default class Login extends React.Component {
           title="Don't have an account? Sign Up"
           onPress={this.goToSignup}
           titleStyle={{
-            color: '#F57C00'
+            color: '#039BE5'
           }}
           type='clear'
         />
