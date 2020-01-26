@@ -3,6 +3,7 @@ import HomeScreenNavigation from './HomeScreenNavigation';
 import ServiceStack from '../navigation/ServiceStack';
 import JobsHistoryStack from '../navigation/JobsHistoryStack'
 import LogoutStack from '../navigation/LogoutStack'
+import Tab from './../pages/TabPages/TabHelper'
 const obj = {
   Home: {
     screen: HomeScreenNavigation,
@@ -12,7 +13,7 @@ const obj = {
   },
   
   JobsHistory: {
-    screen: JobsHistoryStack,
+    screen: Tab,
     navigationOptions: {
       drawerLabel: 'My Orders',
     },

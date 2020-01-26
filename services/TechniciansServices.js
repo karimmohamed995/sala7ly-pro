@@ -1,5 +1,7 @@
 import HttpRequestHelper from '../helpers/HttpRequestHelper';
 import Constants from './Constants';
+import StorageHelper from '../helpers/StorageHelper'
+import DigestHelper from '../helpers/DigestHelper'
 
 export default class TechniciansServices {
   static async postTechnician(data, callback) {
@@ -8,5 +10,19 @@ export default class TechniciansServices {
     let method = 'POST';
     let headers = [];
     HttpRequestHelper.sendRequest(url, headers, false, method, callback, data);
+  }
+
+  static async GetTechnicianWithId(id, callback) {
+    let uri = `/api/technicians/${id}`;
+    let url = `${Constants.serverUrl}${uri}`;
+    let header = await DigestHelper.GenerateDigest(uri, 'GET');
+    let headers = [
+      {
+        key: 'Authorization',
+        value: header,
+      },
+    ];
+    let method = 'GET';
+    HttpRequestHelper.sendRequest(url, headers, true, method, callback);
   }
 }

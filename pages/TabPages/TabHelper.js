@@ -1,6 +1,4 @@
-//This is an example of Tab inside Navigation Drawer in React Native//
 import React from 'react';
-//import react in our code.
 import {
   createAppContainer
 } from 'react-navigation';
@@ -12,13 +10,14 @@ import {
  
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 //Import all the screens for Tab
-import HomeScreen from './HomeScreen';
-import SettingsScreen from './SettingsScreen';
+import JobsScreen from './../JobsScreen';
+import HistoryScreen from './../HistoryScreen';
+import NavigationDrawerStructure from '../../components/NavigationDrawerStructure'
  
 const TabScreen = createMaterialTopTabNavigator(
   {
-    Home: { screen: HomeScreen },
-    Settings: { screen: SettingsScreen },
+    Job: { screen: JobsScreen },
+    history: { screen: HistoryScreen },
   },
   {
     tabBarPosition: 'top',
@@ -43,9 +42,10 @@ const TabScreen = createMaterialTopTabNavigator(
 const TabHelper = createStackNavigator({
   TabScreen: {
     screen: TabScreen,
-    navigationOptions: {
-      header: null,
-    },
+    navigationOptions: ({navigation}) => ({
+      title: 'Home Screen',
+      headerLeft: <NavigationDrawerStructure navigationProps={navigation} />,
+    }),
   },
 });
 export default createAppContainer(TabHelper);

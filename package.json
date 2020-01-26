@@ -35,6 +35,7 @@
     "react-navigation-drawer": "^2.3.3",
     "react-navigation-stack": "^1.10.3",
     "react-navigation-tabs": "^2.6.2",
+    "switch-button-react-native": "^1.0.3",
     "sync-storage": "^0.4.2",
     "yup": "0.27.0"
   },
