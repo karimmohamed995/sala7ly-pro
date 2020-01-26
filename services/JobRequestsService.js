@@ -23,4 +23,23 @@ export default class JobRequestsService{
       body
     );
     }
+
+    static async patchJobRequest(jrId,body,callback){
+      let uri = `/api/jobrequests/${jrId}`;
+    let header = await DigestHelper.GenerateDigest(uri, 'PATCH');
+    let headers = [
+      {
+        key: 'Authorization',
+        value: header,
+      },
+    ];
+    HttpRequestHelper.sendRequest(
+      `${Constants.serverUrl}${uri}`,
+      headers,
+      true,
+      'PATCH',
+      callback,
+      body
+    );
+    }
 }

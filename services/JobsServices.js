@@ -1,31 +1,24 @@
-import DigestHelper from '../helpers/DigestHelper'
-import HttpRequestHelper from '../helpers/HttpRequestHelper'
-import Constants from '../services/Constants'
-import StorageHelper from '../helpers/StorageHelper'
+import DigestHelper from '../helpers/DigestHelper';
+import HttpRequestHelper from '../helpers/HttpRequestHelper';
+import Constants from '../services/Constants';
+import StorageHelper from '../helpers/StorageHelper';
 
-export default class JobsServices{
-
-    static async getAllJobs(callback){
+export default class JobsServices {
+  static async getAllJobs(isPending, callback) {
     let uri = '/api/jobs';
-    let header = await DigestHelper.GenerateDigest(uri, 'GET');
-    let headers = [
-      {
-        key: 'Authorization',
-        value: header,
-      },
-    ];
-    let clientId = (await StorageHelper.getUser()).Id
+    let headers = [];
+    let technicianId = (await StorageHelper.getUser()).Id;
     HttpRequestHelper.sendRequest(
-      `${Constants.serverUrl}${uri}?clientId=${clientId}`,
+      `${Constants.serverUrl}${uri}?technicianId=${technicianId}&isPending=${isPending}`,
       headers,
-      true,
+      false,
       'GET',
       callback,
     );
-    }
+  }
 
-    static async postJob(body,callback){
-      let uri = '/api/jobs';
+  static async postJob(body, callback) {
+    let uri = '/api/jobs';
     let header = await DigestHelper.GenerateDigest(uri, 'POST');
     let headers = [
       {
@@ -39,7 +32,7 @@ export default class JobsServices{
       true,
       'POST',
       callback,
-      body
+      body,
     );
-    }
+  }
 }

@@ -7,47 +7,34 @@ import {
   TextInput,
   Button,
 } from 'react-native';
-import JobsServices from '../services/JobsServices';
-import ReviewsServices from '../services/ReviewsServices';
+import JobsServices from '../../services/JobsServices';
 
 import {Card} from 'react-native-shadow-cards';
 import {ScrollView} from 'react-native-gesture-handler';
 import {AirbnbRating} from 'react-native-ratings';
 
-export default class JobsScreen extends Component { //TODO Make it pretty
+export default class HistoryScreen extends Component {
+  //TODO Make it pretty
   constructor(props) {
     super(props);
 
     this.state = {
-      jobsCards: []
+      jobsCards: [],
     };
     this.serviceCallback = this.serviceCallback.bind(this);
-    this.updateReview = this.updateReview.bind(this);
   }
 
   componentDidMount() {
-    JobsServices.getAllJobs(this.serviceCallback);
-  }
-
-  updateReview(id, rating, message) {
-    ReviewsServices.updateReview(
-      id,
-      {Rating: rating, Message: message},
-      this.reviewUpdateCallBack,
-    );
-  }
-  reviewUpdateCallBack(response) {
-    if (response.status == 200) alert('Review Changed');
+    JobsServices.getAllJobs(false, this.serviceCallback);
   }
 
   serviceCallback = response => {
     var jobsCards = [];
     let jobs = response.response;
+    console.log(response)
     jobs.forEach(job => {
       var Review = <View></View>;
-      if (job.job.State == 'Done') {
-        var newRating = job.review.Rating;
-        var newMessage = job.review.Message;
+      if (job.State == 'Done') {
         Review = (
           <View>
             <AirbnbRating
@@ -55,7 +42,7 @@ export default class JobsScreen extends Component { //TODO Make it pretty
               reviews={['Terrible', 'Bad', 'Meh', 'OK', 'Good']}
               defaultRating={job.review.Rating}
               size={20}
-              onFinishRating={rating => {newRating = rating;}}
+              isDisabled={true}
             />
             <View style={styles.textAreaContainer}>
               <TextInput
@@ -63,50 +50,47 @@ export default class JobsScreen extends Component { //TODO Make it pretty
                 multiline={true}
                 numberOfLines={3}
                 placeholderTextColor="black"
-                placeholder={job.review.Message}
-                onChangeText={descripton => {newMessage = descripton;}}
+                value={job.review.Message}
+                editable={false}
               />
             </View>
-            <Button
-              title="Update Review"
-              color={'#303030'}
-              onPress={() =>
-                this.updateReview(job.review.Id, newRating, newMessage)
-              }
-            />
           </View>
         );
       }
 
-      var Technician = <View></View>;
-      if (job.job.State == 'Scheduled' || job.job.State == 'Done') {
-        Technician = (
+      var client = <View></View>;
+      if (job.RequestState == 'Accepted') {
+        client = (
           <View>
-            <Text>Technician Name: {job.technician.Name}</Text>
-            <Text>Technician Number: {job.technician.PhoneNumber}</Text>
-            <Text>Technician Rate: {job.technician.Rating}</Text>
+            <Text>Client Name: {job.client.Name}</Text>
+            <Text>Client Number: {job.client.PhoneNumber}</Text>
           </View>
         );
       }
       jobsCards.push(
         <Card style={{padding: 10, margin: 10, backgroundColor: '#e6e6e6'}}>
           <Text style={{fontWeight: 'bold', fontSize: 18}}>
-            Service Name:
-            <Text style={{fontWeight: 'normal', fontSize: 15}}>
-              {job.service.Name}
-            </Text>
-          </Text>
-          <Text style={{fontWeight: 'bold', fontSize: 18}}>
             Job Description:
           </Text>
           <Text style={{fontWeight: 'normal', fontSize: 15}}>
-            {job.job.Description}
+            {job.Description}
           </Text>
           <Text style={{fontWeight: 'bold', fontSize: 18}}>
             Job Time:{' '}
             <Text style={{fontWeight: 'normal', fontSize: 15}}>
-              {new Date(job.job.Time).toLocaleString()}
+              {new Date(job.Time).toLocaleString()}
             </Text>
+          </Text>
+          <Text style={{fontWeight: 'bold', fontSize: 18}}>Job Request Status:</Text>
+          <Text
+            style={{
+              border: 1,
+              borderRadius: 5,
+              borderWidth: 1,
+              fontSize: 15,
+              padding: 5,
+            }}>
+            {job.RequestState}
           </Text>
           <Text style={{fontWeight: 'bold', fontSize: 18}}>Job Status:</Text>
           <Text
@@ -117,13 +101,13 @@ export default class JobsScreen extends Component { //TODO Make it pretty
               fontSize: 15,
               padding: 5,
             }}>
-            {job.job.State}
+            {job.State}
           </Text>
-          <Text style={{fontWeight: 'bold', fontSize: 18}}>Your location:</Text>
+          <Text style={{fontWeight: 'bold', fontSize: 18}}>location:</Text>
           <Text style={{fontWeight: 'normal', fontSize: 15}}>
-            {job.job.LocationDescription}
+            {job.LocationDescription}
           </Text>
-          {Technician}
+          {client}
           {Review}
         </Card>,
       );

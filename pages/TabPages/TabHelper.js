@@ -1,23 +1,20 @@
 import React from 'react';
-import {
-  createAppContainer
-} from 'react-navigation';
+import {createAppContainer} from 'react-navigation';
 
-import {
-  createStackNavigator
-} from 'react-navigation-stack';
- 
- 
+import {createStackNavigator} from 'react-navigation-stack';
+
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 //Import all the screens for Tab
-import JobsScreen from './../JobsScreen';
-import HistoryScreen from './../HistoryScreen';
-import NavigationDrawerStructure from '../../components/NavigationDrawerStructure'
- 
+import JobsScreen from './JobsScreen';
+import HistoryScreen from './HistoryScreen';
+import NavigationDrawerStructure from '../../components/NavigationDrawerStructure';
+
 const TabScreen = createMaterialTopTabNavigator(
   {
-    Job: { screen: JobsScreen },
-    history: { screen: HistoryScreen },
+    JobRequests: {screen: JobsScreen,navigationOptions: ({navigation}) => ({
+      title: 'Job Requests',
+    }),},
+    history: {screen: HistoryScreen},
   },
   {
     tabBarPosition: 'top',
@@ -37,7 +34,7 @@ const TabScreen = createMaterialTopTabNavigator(
         borderBottomWidth: 2,
       },
     },
-  }
+  },
 );
 const TabHelper = createStackNavigator({
   TabScreen: {

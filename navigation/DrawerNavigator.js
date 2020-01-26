@@ -1,9 +1,8 @@
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import HomeScreenNavigation from './HomeScreenNavigation';
 import ServiceStack from '../navigation/ServiceStack';
-import JobsHistoryStack from '../navigation/JobsHistoryStack'
-import LogoutStack from '../navigation/LogoutStack'
-import Tab from './../pages/TabPages/TabHelper'
+import LogoutStack from '../navigation/LogoutStack';
+import Tab from './../pages/TabPages/TabHelper';
 const obj = {
   Home: {
     screen: HomeScreenNavigation,
@@ -11,7 +10,7 @@ const obj = {
       drawerLabel: 'Home',
     },
   },
-  
+
   JobsHistory: {
     screen: Tab,
     navigationOptions: {
@@ -22,20 +21,17 @@ const obj = {
     screen: LogoutStack,
     navigationOptions: {
       drawerLabel: 'Logout',
-      drawerLockMode: 'locked-closed'
+      drawerLockMode: 'locked-closed',
     },
   },
   ServiceSelection: {
     screen: ServiceStack,
     navigationOptions: {
-      drawerLabel: ()=>null,
+      drawerLabel: () => null,
     },
-  }
- 
-
+  },
 };
 
-    
-    const DrawerNavigator = createDrawerNavigator(obj,{initialRouteName: 'Home',});
+const DrawerNavigator = createDrawerNavigator(obj, {initialRouteName: 'Home'});
 
 export default DrawerNavigator;

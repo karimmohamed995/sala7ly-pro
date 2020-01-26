@@ -17,6 +17,7 @@ export default class HttpRequestHelper {
             let header = response.getResponseHeader('www-authenticate');
             DigestHelper.SetNonce(header);
         }
+
         callback(response);
     }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import {createStackNavigator} from 'react-navigation-stack';
-import HomeScreen from './../pages/TabPages/HomeScreen';
+import HomeScreen from './../pages/HomeScreen';
 import NavigationDrawerStructure from '../components/NavigationDrawerStructure'
 const HomeScreenNavigation = createStackNavigator(
   {
