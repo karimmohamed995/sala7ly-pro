@@ -15,20 +15,28 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {AirbnbRating} from 'react-native-ratings';
 import StorageHelper from '../../helpers/StorageHelper';
 
+let init = {
+  jobsCards: [],
+  TechnicianId: -1,
+  message: '',
+};
 export default class JobsScreen extends Component {
   //TODO Make it pretty
   constructor(props) {
     super(props);
 
-    this.state = {
-      jobsCards: [],
-      TechnicianId: -1,
-    };
+    this.state = init;
     this.serviceCallback = this.serviceCallback.bind(this);
     this.callback = this.callback.bind(this);
+    this.initializeComp = this.initializeComp.bind(this);
   }
 
   async componentDidMount() {
+    await this.initializeComp();
+  }
+
+  async initializeComp(){
+    this.setState(init);
     this.setState({TechnicianId: (await StorageHelper.getUser()).Id});
     JobsServices.getAllJobs(true, this.serviceCallback);
   }
@@ -38,7 +46,7 @@ export default class JobsScreen extends Component {
       TechnicianId: this.state.TechnicianId,
       State: 1,
     };
-    JobRequestsServices.patchJobRequest(requestId, body,this.callback);
+    JobRequestsServices.patchJobRequest(requestId, body, this.callback);
   }
 
   rejectRequest(requestId) {
@@ -46,19 +54,20 @@ export default class JobsScreen extends Component {
       TechnicianId: this.state.TechnicianId,
       State: 2,
     };
-    JobRequestsServices.patchJobRequest(requestId, body,this.callback);
+    JobRequestsServices.patchJobRequest(requestId, body, this.callback);
   }
 
   callback(response) {
-    console.log(response);
     if (response.status == 200) {
       this.props.navigation.navigate('Home');
     }
   }
   serviceCallback = response => {
-    console.log(response);
     var jobsCards = [];
     let jobs = response.response;
+    if (jobs.length == 0) {
+      this.state.message = 'No Pending Jobs';
+    }
     jobs.forEach(job => {
       jobsCards.push(
         <Card style={{padding: 10, margin: 10, backgroundColor: '#e6e6e6'}}>
@@ -78,8 +87,20 @@ export default class JobsScreen extends Component {
           <Text style={{fontWeight: 'normal', fontSize: 15}}>
             {job.LocationDescription}
           </Text>
-          <Button title="Accept" onPress={()=>this.acceptRequest(job.RequestId)} />
-          <Button title="Ignore" onPress={()=>this.rejectRequest(job.RequestId)} />
+          <View style={{padding: 5}}>
+            <Button
+              color="#36ba4e"
+              title="Accept"
+              onPress={() => this.acceptRequest(job.RequestId)}
+            />
+          </View>
+          <View style={{padding: 5}}>
+            <Button
+              color="red"
+              title="Ignore"
+              onPress={() => this.rejectRequest(job.RequestId)}
+            />
+          </View>
         </Card>,
       );
     });
@@ -90,6 +111,9 @@ export default class JobsScreen extends Component {
     return (
       <ScrollView style={{marginHorizontal: 20}}>
         <View style={styles.container}>{this.state.jobsCards}</View>
+        <Text style={{textAlign: 'center', paddingTop: 200,fontSize:20}}>
+          {this.state.message}
+        </Text>
       </ScrollView>
     );
   }

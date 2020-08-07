@@ -1,6 +1,5 @@
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import HomeScreenNavigation from './HomeScreenNavigation';
-import ServiceStack from '../navigation/ServiceStack';
 import LogoutStack from '../navigation/LogoutStack';
 import Tab from './../pages/TabPages/TabHelper';
 const obj = {
@@ -22,12 +21,6 @@ const obj = {
     navigationOptions: {
       drawerLabel: 'Logout',
       drawerLockMode: 'locked-closed',
-    },
-  },
-  ServiceSelection: {
-    screen: ServiceStack,
-    navigationOptions: {
-      drawerLabel: () => null,
     },
   },
 };

@@ -13,25 +13,30 @@ import {Card} from 'react-native-shadow-cards';
 import {ScrollView} from 'react-native-gesture-handler';
 import {AirbnbRating} from 'react-native-ratings';
 
+let init = {
+  jobsCards: [],
+};
 export default class HistoryScreen extends Component {
-  //TODO Make it pretty
   constructor(props) {
     super(props);
 
-    this.state = {
-      jobsCards: [],
-    };
+    this.state = init;
     this.serviceCallback = this.serviceCallback.bind(this);
+    this.iniitializeComponent = this.iniitializeComponent.bind(this);
   }
 
   componentDidMount() {
+    this.iniitializeComponent();
+  }
+
+  iniitializeComponent() {
+    this.setState(init);
     JobsServices.getAllJobs(false, this.serviceCallback);
   }
 
   serviceCallback = response => {
     var jobsCards = [];
     let jobs = response.response;
-    console.log(response)
     jobs.forEach(job => {
       var Review = <View></View>;
       if (job.State == 'Done') {
@@ -62,8 +67,21 @@ export default class HistoryScreen extends Component {
       if (job.RequestState == 'Accepted') {
         client = (
           <View>
-            <Text>Client Name: {job.client.Name}</Text>
-            <Text>Client Number: {job.client.PhoneNumber}</Text>
+            <Text style={{fontWeight: 'bold', fontSize: 18}}>
+              Client Name:{' '}
+              <Text style={{fontWeight: 'normal', fontSize: 16}}>
+                {' '}
+                {job.client.Name}{' '}
+              </Text>
+            </Text>
+
+            <Text style={{fontWeight: 'bold', fontSize: 18}}>
+              Client Number:{' '}
+              <Text style={{fontWeight: 'normal', fontSize: 16}}>
+                {' '}
+                {job.client.PhoneNumber}
+              </Text>
+            </Text>
           </View>
         );
       }
@@ -81,7 +99,9 @@ export default class HistoryScreen extends Component {
               {new Date(job.Time).toLocaleString()}
             </Text>
           </Text>
-          <Text style={{fontWeight: 'bold', fontSize: 18}}>Job Request Status:</Text>
+          <Text style={{fontWeight: 'bold', fontSize: 18}}>
+            Job Request Status:
+          </Text>
           <Text
             style={{
               border: 1,
@@ -104,7 +124,7 @@ export default class HistoryScreen extends Component {
             {job.State}
           </Text>
           <Text style={{fontWeight: 'bold', fontSize: 18}}>location:</Text>
-          <Text style={{fontWeight: 'normal', fontSize: 15}}>
+          <Text style={{fontWeight: 'normal', fontSize: 16}}>
             {job.LocationDescription}
           </Text>
           {client}

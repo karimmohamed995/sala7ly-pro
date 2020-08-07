@@ -17,6 +17,24 @@ export default class JobsServices {
     );
   }
 
+  static async getCurrentJob(id, callback) {
+    let uri = `/api/jobs`;
+    let header = await DigestHelper.GenerateDigest(uri, 'GET');
+    let headers = [
+      {
+        key: 'Authorization',
+        value: header,
+      },
+    ];
+    HttpRequestHelper.sendRequest(
+      `${Constants.serverUrl}${uri}?technicianId=${id}`,
+      headers,
+      true,
+      'GET',
+      callback,
+    );
+  }
+
   static async postJob(body, callback) {
     let uri = '/api/jobs';
     let header = await DigestHelper.GenerateDigest(uri, 'POST');
@@ -31,6 +49,25 @@ export default class JobsServices {
       headers,
       true,
       'POST',
+      callback,
+      body,
+    );
+  }
+
+  static async PatchJobState(id,body, callback) {
+    let uri = `/api/jobs/${id}`;
+    let header = await DigestHelper.GenerateDigest(uri, 'PATCH');
+    let headers = [
+      {
+        key: 'Authorization',
+        value: header,
+      },
+    ];
+    HttpRequestHelper.sendRequest(
+      `${Constants.serverUrl}${uri}`,
+      headers,
+      true,
+      'PATCH',
       callback,
       body,
     );

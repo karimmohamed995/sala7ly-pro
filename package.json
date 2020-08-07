@@ -28,6 +28,7 @@
     "react-native-reanimated": "^1.4.0",
     "react-native-screens": "1.0.0-alpha.22",
     "react-native-shadow-cards": "^1.0.2",
+    "react-native-switch-toggle": "^1.1.4",
     "react-native-tab-view": "^2.11.0",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.4",
